@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE Stamp Tools まとめ</title>
+  <meta name="description" content="LINEスタンプ制作を応援する4つの無料Webツールをまとめたポータルページです。背景透過・画像分割・リサイズ・フォーマット変換に対応しています。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==============================
+       CSS Variables (DESIGN.md 準拠)
+    ============================== */
+    :root {
+      --color-base:   #FFFFFF;
+      --color-main:   #00c9a7;
+      --color-accent: #F5F5F5;
+      --font-base:    'Noto Sans JP', sans-serif;
+      --font-en:      'Outfit', sans-serif;
+    }
+
+    /* ==============================
+       Reset
+    ============================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-base);
+      background-color: var(--color-base);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      /* fixed ナビ分の余白 */
+      padding-top: 64px;
+    }
+
+    /* ==============================
+       Header
+    ============================== */
+    .site-header {
+      width: 100%;
+      padding: 48px 24px 48px;
+      text-align: center;
+      background-color: var(--color-base);
+    }
+
+    .site-header__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .site-header__tag {
+      font-family: var(--font-en);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--color-main);
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    .site-header h1 {
+      font-family: var(--font-en);
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--color-main);
+      line-height: 1;
+    }
+
+    .site-header__subtitle {
+      font-family: var(--font-base);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--color-main);
+    }
+
+    /* ==============================
+       Section Separator (色面、border禁止のため div で代替)
+    ============================== */
+    .sep {
+      width: 100%;
+      height: 1px;
+      background-color: var(--color-accent);
+    }
+
+    /* ==============================
+       Scroll Navigation (Dots)
+    ============================== */
+    .scroll-nav {
+      position: fixed;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .scroll-nav__dot {
+      display: block;
+      width: 8px;
+      height: 8px;
+      background-color: #E7EAE7;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      text-decoration: none;
+    }
+
+    .scroll-nav__dot.is-active {
+      background-color: var(--color-main);
+      transform: scale(1.5);
+    }
+
+    /* ==============================
+       Main Content
+    ============================== */
+    .main-content {
+      flex: 1;
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    /* ==============================
+       Tool Section
+    ============================== */
+    .tool-section {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      /* スティッキーナビ分のオフセット */
+      scroll-margin-top: 64px;
+    }
+
+    /* ── Left: Sticky Number Column ── */
+    .num-col {
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      /* 右カラムの padding-top に揃える */
+      padding-top: 96px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .num-col__num {
+      font-family: var(--font-en);
+      font-size: clamp(110px, 13vw, 180px);
+      font-weight: 900;
+      color: var(--color-main);
+      line-height: 1;
+      /* 初期: 非アクティブ */
+      opacity: 0.1;
+      transform: translateY(16px);
+      transition:
+        opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tool-section.is-active .num-col__num {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Right: Content Column ── */
+    .content-col {
+      padding: 96px 0 96px 56px;
+    }
+
+    /* セクション区切り線：グレー背景に切り替えたため非表示 */
+    .content-col__divider {
+      display: none;
+    }
+
+    /* ツール番号ラベル */
+    .tool-seq {
+      font-family: var(--font-en);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--color-main);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      opacity: 0.55;
+    }
+
+    /* ツール名（英語） */
+    .tool-name-en {
+      font-family: var(--font-en);
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 700;
+      color: var(--color-main);
+      letter-spacing: 0.03em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    /* ツール名（日本語） */
+    .tool-name-jp {
+      font-family: var(--font-base);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--color-main);
+      margin-bottom: 40px;
+    }
+
+    /* 紹介文 */
+    .tool-description {
+      font-family: var(--font-base);
+      font-size: 15px;
+      line-height: 2;
+      color: var(--color-main);
+      max-width: 100%;
+      margin-bottom: 48px;
+      background-color: var(--color-accent);
+      padding: 24px 32px;
+    }
+
+    /* 動画 */
+    .tool-video-wrap {
+      width: 100%;
+      max-width: 100%;
+      background-color: var(--color-accent);
+      margin-bottom: 40px;
+      overflow: hidden;
+      border: 1px solid #F5F5F5;
+    }
+
+    .tool-video-wrap video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* CTAボタン（Primary） */
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--color-main);
+      color: var(--color-base);
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 36px;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .tool-link:hover {
+      opacity: 0.9;
+    }
+
+    .tool-link svg {
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .tool-link:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* ==============================
+       Footer
+    ============================== */
+    .site-footer {
+      width: 100%;
+      padding: 24px 0;
+      text-align: center;
+      background-color: var(--color-base);
+      margin-top: auto;
+    }
+
+    .site-footer p {
+      font-family: var(--font-en);
+      font-size: 14px;
+      color: #00c9a7;
+      letter-spacing: 0.05em;
+    }
+
+    /* ==============================
+       Site Intro
+    ============================== */
+    .site-intro {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 0;
+      text-align: left;
+      background-color: var(--color-base);
+    }
+
+    .site-intro p {
+      font-family: var(--font-base);
+      font-size: 16px;
+      line-height: 2;
+      color: var(--color-main);
+      font-weight: 700;
+    }
+
+    /* ==============================
+       Top Navigation
+    ============================== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      z-index: 200;
+      background-color: var(--color-base);
+      width: 100%;
+      padding: 0 24px;
+    }
+
+    .top-nav__inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 48px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 0 0;
+    }
+
+    .top-nav__sep {
+      height: 1px;
+      background-color: var(--color-accent);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .top-nav__item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      text-decoration: none;
+      cursor: pointer;
+      padding-bottom: 12px;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    /* アクティブ下線（border禁止のため::after で代替） */
+    .top-nav__item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+    }
+
+    .top-nav__item.is-active::after {
+      background-color: var(--color-main);
+    }
+
+    .top-nav__num {
+      font-family: var(--font-en);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--color-main);
+      opacity: 0.5;
+      line-height: 1;
+    }
+
+    .top-nav__label {
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--color-main);
+      line-height: 1;
+      /* font-weightの変化はレイアウトシフトを引き起こすため opacity で代替 */
+      opacity: 0.55;
+      transition: opacity 0.25s ease;
+    }
+
+    .top-nav__item.is-active .top-nav__label {
+      opacity: 1;
+    }
+
+    /* ==============================
+       Responsive
+    ============================== */
+
+    /* Laptop (1439px以下) */
+    @media (max-width: 1439px) {
+      .main-content {
+        width: 100%;
+      }
+    }
+
+    /* Tablet (1023px以下) */
+    @media (max-width: 1023px) {
+      .main-content,
+      .site-intro {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .top-nav__inner {
+        gap: 24px;
+      }
+      .top-nav__label {
+        font-size: 11px;
+      }
+      .tool-section {
+        grid-template-columns: 160px 1fr;
+      }
+      .num-col__num {
+        font-size: 96px;
+      }
+      .content-col {
+        padding: 80px 0 80px 32px;
+      }
+      .scroll-nav {
+        right: 16px;
+      }
+    }
+
+    /* Mobile (767px以下) */
+    @media (max-width: 767px) {
+      /* ナビ：番号のみ表示 */
+      .top-nav__inner {
+        gap: 16px;
+      }
+      .top-nav__label {
+        display: none;
+      }
+      .top-nav__num {
+        font-size: 12px;
+        opacity: 1;
+      }
+      .top-nav__item {
+        padding-bottom: 10px;
+      }
+
+      .site-header h1 {
+        font-size: 24px;
+      }
+      .site-header__subtitle {
+        font-size: 14px;
+      }
+      .site-header {
+        padding: 32px 24px;
+      }
+
+      /* モバイルは1カラム */
+      .tool-section {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        scroll-margin-top: 44px;
+      }
+
+      .num-col {
+        position: static;
+        height: auto;
+        padding: 48px 0 0;
+        pointer-events: auto;
+      }
+
+      .num-col__num {
+        font-size: 80px;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .content-col {
+        padding: 24px 0 64px;
+      }
+
+      .scroll-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================
+       Top Navigation
+  ============================== -->
+  <nav class="top-nav" id="top-nav" aria-label="ツール一覧ナビゲーション">
+    <div class="top-nav__inner">
+      <a class="top-nav__item" href="#tool-01" id="nav-top-01">
+        <span class="top-nav__num">01.</span>
+        <span class="top-nav__label">BACKGROUND REMOVER</span>
+      </a>
+      <a class="top-nav__item" href="#tool-02" id="nav-top-02">
+        <span class="top-nav__num">02.</span>
+        <span class="top-nav__label">IMAGE SPLITTER</span>
+      </a>
+      <a class="top-nav__item" href="#tool-03" id="nav-top-03">
+        <span class="top-nav__num">03.</span>
+        <span class="top-nav__label">IMAGE RESIZER</span>
+      </a>
+      <a class="top-nav__item" href="#tool-04" id="nav-top-04">
+        <span class="top-nav__num">04.</span>
+        <span class="top-nav__label">IMAGE RESIZER &amp; CONVERTER</span>
+      </a>
+    </div>
+    <div class="top-nav__sep"></div>
+  </nav>
+
+  <!-- ==============================
+       Scroll Navigation Dots
+  ============================== -->
+  <nav class="scroll-nav" aria-label="セクション内ナビゲーション">
+    <a class="scroll-nav__dot" href="#tool-01" id="nav-dot-01" aria-label="01 Background Remover へ移動"></a>
+    <a class="scroll-nav__dot" href="#tool-02" id="nav-dot-02" aria-label="02 Image Splitter へ移動"></a>
+    <a class="scroll-nav__dot" href="#tool-03" id="nav-dot-03" aria-label="03 Image Resizer へ移動"></a>
+    <a class="scroll-nav__dot" href="#tool-04" id="nav-dot-04" aria-label="04 Image Resizer & Converter へ移動"></a>
+  </nav>
+
+
+  <!-- ==============================
+       Site Intro
+  ============================== -->
+  <div class="site-intro">
+    <p>LINEスタンプ制作を応援する4つの無料Webツールをまとめたポータルページです。</p>
+    <p>背景透過・画像分割・リサイズ・フォーマット変換に対応しています。</p>
+  </div>
+
+  <!-- ==============================
+       Main
+  ============================== -->
+  <main class="main-content">
+
+    <!-- ── 01: BACKGROUND REMOVER ── -->
+    <section class="tool-section" id="tool-01">
+      <div class="num-col">
+        <span class="num-col__num" aria-hidden="true">01</span>
+      </div>
+      <div class="content-col">
+        <div class="content-col__divider"></div>
+        <p class="tool-seq">01 / 04 &nbsp;·&nbsp; Background Remover</p>
+        <h2 class="tool-name-en">BACKGROUND<br>REMOVER</h2>
+        <p class="tool-name-jp">- 画像背景透過ツール -</p>
+        <p class="tool-description">LINEスタンプ制作応援ツール第1弾として、画像の背景透過アプリを開発しました。アップロードした画像をAIが自動で解析し、人物や物といった被写体だけを切り抜いて背景を透過させたPNG形式の画像を作成・ダウンロードできます。</p>
+        <div class="tool-video-wrap">
+          <video autoplay muted loop playsinline>
+            <source src="1-bg-remover.mp4" type="video/mp4">
+          </video>
+        </div>
+        <a href="https://jnishina-co9.github.io/line-background-remover/"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="tool-link"
+           id="link-bg-remover">
+          ツールを使う
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── 02: IMAGE SPLITTER ── -->
+    <section class="tool-section" id="tool-02">
+      <div class="num-col">
+        <span class="num-col__num" aria-hidden="true">02</span>
+      </div>
+      <div class="content-col">
+        <div class="content-col__divider"></div>
+        <p class="tool-seq">02 / 04 &nbsp;·&nbsp; Image Splitter</p>
+        <h2 class="tool-name-en">IMAGE<br>SPLITTER</h2>
+        <p class="tool-name-jp">- 画像分割ツール -</p>
+        <p class="tool-description">LINEスタンプ制作応援ツール第2弾。アップロードした画像を、指定した「タテ × ヨコ」のマス目に従って均等に切り分け、個別に保存したり、まとめてZIP形式で保存したりできる、インストール不要の完全無料ツールです。</p>
+        <div class="tool-video-wrap">
+          <video preload="metadata" autoplay muted loop playsinline>
+            <source src="2-splitter.mp4" type="video/mp4">
+          </video>
+        </div>
+        <a href="https://jnishina-co9.github.io/line-image-splitter/"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="tool-link"
+           id="link-splitter">
+          ツールを使う
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── 03: IMAGE RESIZER ── -->
+    <section class="tool-section" id="tool-03">
+      <div class="num-col">
+        <span class="num-col__num" aria-hidden="true">03</span>
+      </div>
+      <div class="content-col">
+        <div class="content-col__divider"></div>
+        <p class="tool-seq">03 / 04 &nbsp;·&nbsp; Image Resizer</p>
+        <h2 class="tool-name-en">IMAGE<br>RESIZER</h2>
+        <p class="tool-name-jp">- 画像リサイズツール -</p>
+        <p class="tool-description">LINEスタンプ制作応援ツール第3弾。スタンプ画像の制作ガイドラインで定められている規格に、アップロードした画像ファイルを一括で自動リサイズできるWebアプリケーションです。</p>
+        <div class="tool-video-wrap">
+          <video preload="metadata" autoplay muted loop playsinline>
+            <source src="3-resizer.mp4" type="video/mp4">
+          </video>
+        </div>
+        <a href="https://jnishina-co9.github.io/line-image-resizer/"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="tool-link"
+           id="link-resizer">
+          ツールを使う
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── 04: IMAGE RESIZER & CONVERTER ── -->
+    <section class="tool-section" id="tool-04">
+      <div class="num-col">
+        <span class="num-col__num" aria-hidden="true">04</span>
+      </div>
+      <div class="content-col">
+        <div class="content-col__divider"></div>
+        <p class="tool-seq">04 / 04 &nbsp;·&nbsp; Image Resizer & Converter</p>
+        <h2 class="tool-name-en">IMAGE RESIZER<br>& CONVERTER</h2>
+        <p class="tool-name-jp">ー 画像リサイズ ＆ フォーマット変換ツール ー</p>
+        <p class="tool-description">ブラウザ上で画像のサイズや形式を自在に調整し、個別または一括でダウンロードできます。第3弾の画像リサイズツールをより進化させたアドバンスド版として、汎用的に使える画像調整ツールを開発しました。</p>
+        <div class="tool-video-wrap">
+          <video preload="metadata" autoplay muted loop playsinline>
+            <source src="4-resizer-converter.mp4" type="video/mp4">
+          </video>
+        </div>
+        <a href="https://jnishina-co9.github.io/image-resizer-converter/"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="tool-link"
+           id="link-converter">
+          ツールを使う
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==============================
+       Footer
+  ============================== -->
+  <div class="sep"></div>
+  <footer class="site-footer">
+    <p>© 2026 深森呼吸</p>
+  </footer>
+
+  <!-- ==============================
+       JavaScript: Sticky Number Activation
+  ============================== -->
+  <script>
+    (function () {
+      const sections = document.querySelectorAll('.tool-section');
+      const navDots  = document.querySelectorAll('.scroll-nav__dot');
+
+      // IntersectionObserver で各セクションの表示を監視
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const idx = Array.from(sections).indexOf(entry.target);
+            if (entry.isIntersecting) {
+              // 数字をアクティブに
+              sections.forEach((s) => s.classList.remove('is-active'));
+              entry.target.classList.add('is-active');
+
+              // ナビドットをアクティブに
+              navDots.forEach((d) => d.classList.remove('is-active'));
+              if (navDots[idx]) navDots[idx].classList.add('is-active');
+
+              // トップナビをアクティブに
+              const topItems = document.querySelectorAll('.top-nav__item');
+              topItems.forEach((t) => t.classList.remove('is-active'));
+              if (topItems[idx]) topItems[idx].classList.add('is-active');
+            }
+          });
+        },
+        {
+          // セクションが画面の 40% 以上に入ったらアクティブ
+          threshold: 0.4,
+        }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+
+      // ページ読み込み時: 最初のセクションをアクティブに
+      if (sections.length > 0) {
+        sections[0].classList.add('is-active');
+        if (navDots[0]) navDots[0].classList.add('is-active');
+        const topItems = document.querySelectorAll('.top-nav__item');
+        if (topItems[0]) topItems[0].classList.add('is-active');
+      }
+    })();
+  </script>
+
+</body>
+</html>
