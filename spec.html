@@ -497,12 +497,12 @@
   }
 
   .tool-list-table td {
-    font-size: 15px;
+    font-size: 16px;
     color: var(--color-text);
     padding: 16px 20px;
     border-bottom: 1px solid var(--color-border);
     vertical-align: top;
-    line-height: 1.7;
+    line-height: 1.9;
   }
 
   .tool-list-table tr:last-child td { border-bottom: none; }
@@ -571,6 +571,8 @@
     .page-header { padding: 40px; }
     .page-footer { padding: 20px 40px; }
     .block-grid { grid-template-columns: 1fr; }
+    .tool-list-table .tool-name-cell { white-space: normal; }
+    .tool-list-table td:nth-child(4) { word-break: break-all; }
   }
 
   /* S: スマホ（767px 以下） */
@@ -631,9 +633,16 @@
     }
     .overlay.is-active { display: block; }
 
-    .tool-list-table { font-size: 13px; }
-    .tool-list-table th { font-size: 11px; padding: 12px 12px; }
-    .tool-list-table td { font-size: 13px; padding: 12px 12px; }
+    /* Tool list table: card layout */
+    .tool-list-table thead { display: none; }
+    .tool-list-table, .tool-list-table tbody, .tool-list-table tr, .tool-list-table td { display: block; width: 100%; }
+    .tool-list-table tr { padding: 20px 16px; border-bottom: 1px solid var(--color-border); }
+    .tool-list-table tr:last-child { border-bottom: none; }
+    .tool-list-table td { border-bottom: none; padding: 3px 0; font-size: 14px; }
+    .tool-list-table .tool-num { font-size: 16px; padding-bottom: 2px; }
+    .tool-list-table .tool-name-cell { white-space: normal; font-size: 14px; font-weight: 500; padding-bottom: 8px; }
+    .tool-list-table td:nth-child(3) { font-size: 14px; padding-bottom: 8px; }
+    .tool-list-table td:nth-child(4) { font-size: 12px; word-break: break-all; }
   }
 
   /* =============================================
@@ -1116,25 +1125,25 @@
           <tbody>
             <tr>
               <td class="tool-num">01</td>
-              <td class="tool-name-cell">Background Remover<br>（画像背景透過ツール）</td>
+              <td class="tool-name-cell">Background Remover<br>画像背景透過ツール</td>
               <td>AIが画像を解析し、被写体を切り抜いて背景を透過させたPNG画像を作成</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/line-background-remover/" target="_blank" rel="noopener">jnishina-co9.github.io/line-background-remover/</a></td>
             </tr>
             <tr>
               <td class="tool-num">02</td>
-              <td class="tool-name-cell">Image Splitter<br>（画像分割ツール）</td>
+              <td class="tool-name-cell">Image Splitter<br>画像分割ツール</td>
               <td>画像を指定したタテ×ヨコのマス目で均等に分割し、個別またはZIP形式で保存</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/line-image-splitter/" target="_blank" rel="noopener">jnishina-co9.github.io/line-image-splitter/</a></td>
             </tr>
             <tr>
               <td class="tool-num">03</td>
-              <td class="tool-name-cell">Image Resizer<br>（画像リサイズツール）</td>
+              <td class="tool-name-cell">Image Resizer<br>画像リサイズツール</td>
               <td>LINEスタンプ画像特化型。申請時の制作ガイドラインが定める画像サイズ基準を自動で満たす画像を一括作成</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/line-image-resizer/" target="_blank" rel="noopener">jnishina-co9.github.io/line-image-resizer/</a></td>
             </tr>
             <tr>
               <td class="tool-num">04</td>
-              <td class="tool-name-cell">Image Resizer &amp; Converter<br>（画像リサイズ＆形式変換ツール）</td>
+              <td class="tool-name-cell">Image Resizer &amp; Converter<br>画像リサイズ＆形式変換ツール</td>
               <td>第3弾の進化版。LINEスタンプに限らず、サイト制作・SNS投稿・資料作成など幅広い用途に対応する汎用画像調整ツール</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/image-resizer-converter/" target="_blank" rel="noopener">jnishina-co9.github.io/image-resizer-converter/</a></td>
             </tr>
@@ -1151,8 +1160,8 @@
           <h2 class="section-title" id="title-7">おわりに</h2>
         </div>
         <div class="section-body">
-          <div style="background: var(--color-base); padding: 32px 24px; line-height: 2.0;">
-            <p style="margin-bottom: 16px;">開発にあたっては、あえて1つの万能アプリにはせず、機能ごとに独立したツールとして分離する設計を選びました。これは「利用者が迷わないシンプルな画面」と「将来の改善が容易なメンテナンス性」を両立させるためです。第3弾のリサイズツールはLINEスタンプ申請に特化した専用ツールとして、第4弾はそこからさらに進化させ、サイト制作やSNS投稿、資料作成にも活用できる汎用ツールとして、UI/UXを考慮して開発できたと感じています。</p>
+          <div class="accordion__body" style="display: block; background: var(--color-base); padding: 32px 24px;">
+            <p>開発にあたっては、あえて1つの万能アプリにはせず、機能ごとに独立したツールとして分離する設計を選びました。これは「利用者が迷わないシンプルな画面」と「将来の改善が容易なメンテナンス性」を両立させるためです。第3弾のリサイズツールはLINEスタンプ申請に特化した専用ツールとして、第4弾はそこからさらに進化させ、サイト制作やSNS投稿、資料作成にも活用できる汎用ツールとして、UI/UXを考慮して開発できたと感じています。</p>
             <p>どのツールもブラウザだけで完結し、画像データを外部サーバーに送信しない設計にしているため、安心してお使いいただけます。LINEスタンプ制作に取り組むすべての方にとって、これらのツールが少しでもお役に立てれば幸いです。</p>
           </div>
         </div>
