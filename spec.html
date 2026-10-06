@@ -14,17 +14,14 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    /* 4色パレット */
-    --color-main:    #007E66;
-    --color-base:    #FFFFFF;
-    --color-sub:     #E7EAE7;
-    --color-accent:  #F25A86;
-    --color-text:    #333333;
-    /* 派生色 */
-    --color-text-sub:      #6B7B6B;
-    --color-border:        #D4D9D4;
-    --color-main-light:    #E8F4F1;
-    --color-accent-light:  #FDEEF4;
+    /* モノトーン ＋ LINEカラー パレット */
+    --color-base:          #FFFFFF;        /* 白 */
+    --color-sub:           #F7F7F8;        /* 薄いグレー（背景面） */
+    --color-border:        #E5E5E5;        /* 薄いグレー（枠線・区切り線） */
+    --color-text:          #222222;        /* 濃いグレー（本文・見出し） */
+    --color-text-sub:      #666666;        /* 中濃グレー（サブテキスト・ラベル） */
+    --color-line:          #06C755;        /* アクセント：LINE公式カラー */
+    --color-line-light:    #EBF9F0;        /* LINEカラー極薄背景 */
     --font-base:     'Noto Sans JP', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
     --font-accent:   'Outfit', 'Segoe UI', -apple-system, sans-serif;
     --sidebar-width: 260px;
@@ -77,14 +74,14 @@
     font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.12em;
-    color: var(--color-main);
+    color: var(--color-text);
     text-transform: uppercase;
     text-decoration: none;
     display: block;
-    transition: opacity 0.2s;
+    transition: color 0.2s;
   }
 
-  .sidebar__app-name:hover { opacity: 0.7; }
+  .sidebar__app-name:hover { color: var(--color-line); }
 
   .sidebar__doc-type {
     font-size: 12px;
@@ -133,9 +130,9 @@
   }
 
   .nav__item.is-active {
-    background: var(--color-main-light);
-    color: var(--color-main);
-    border-left-color: var(--color-main);
+    background: var(--color-line-light);
+    color: var(--color-line);
+    border-left-color: var(--color-line);
     font-weight: 700;
   }
 
@@ -143,12 +140,15 @@
     font-family: var(--font-accent);
     font-size: 12px;
     font-weight: 700;
-    color: var(--color-main);
-    opacity: 0.6;
+    color: var(--color-text-sub);
+    opacity: 0.7;
     min-width: 20px;
   }
 
-  .nav__item.is-active .nav__item-num { opacity: 1; }
+  .nav__item.is-active .nav__item-num {
+    color: var(--color-line);
+    opacity: 1;
+  }
 
   /* =============================================
      MAIN CONTENT
@@ -163,16 +163,16 @@
      PAGE HEADER
   ============================================= */
   .page-header {
-    background: var(--color-main);
+    background: #1A1A1A;
     padding: 48px 64px;
   }
 
   .page-header__eyebrow {
     font-family: var(--font-accent);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.2em;
-    color: rgba(255,255,255,0.7);
+    color: var(--color-line);
     text-transform: uppercase;
     margin-bottom: 12px;
   }
@@ -235,7 +235,8 @@
     background: var(--color-base);
     padding: 40px;
     margin-bottom: 48px;
-    border-left: 6px solid var(--color-main);
+    border: 1px solid var(--color-border);
+    border-left: 6px solid var(--color-line);
   }
 
   .app-card__title {
@@ -243,7 +244,7 @@
     font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.15em;
-    color: var(--color-main);
+    color: var(--color-text);
     text-transform: uppercase;
     margin-bottom: 24px;
   }
@@ -282,6 +283,7 @@
     display: inline-block;
     background: var(--color-sub);
     color: var(--color-text);
+    border: 1px solid var(--color-border);
     font-size: 14px;
     padding: 3px 10px;
     font-family: var(--font-accent);
@@ -292,10 +294,15 @@
   .url-link {
     font-family: var(--font-accent);
     font-size: 14px;
-    color: var(--color-main);
+    color: var(--color-line);
     text-decoration: none;
-    border-bottom: 1px solid var(--color-main);
+    border-bottom: 1px solid var(--color-line);
     padding-bottom: 1px;
+    transition: opacity 0.2s ease;
+  }
+
+  .url-link:hover {
+    opacity: 0.8;
   }
 
   /* =============================================
@@ -312,15 +319,15 @@
     gap: 16px;
     margin-bottom: 24px;
     padding-bottom: 12px;
-    border-bottom: 2px solid var(--color-main);
+    border-bottom: 2px solid var(--color-border);
   }
 
   .section-num {
     font-family: var(--font-accent);
     font-size: 24px;
     font-weight: 700;
-    color: var(--color-main);
-    opacity: 0.4;
+    color: var(--color-line);
+    opacity: 1;
   }
 
   .section-title {
@@ -342,6 +349,7 @@
   ============================================= */
   .accordion {
     background: var(--color-base);
+    border: 1px solid var(--color-border);
     overflow: hidden;
   }
 
@@ -359,7 +367,7 @@
     transition: background 0.15s;
   }
 
-  .accordion__trigger:hover { background: var(--color-main-light); }
+  .accordion__trigger:hover { background: var(--color-sub); }
 
   .accordion__trigger-left {
     display: flex;
@@ -377,6 +385,7 @@
     white-space: nowrap;
     background: var(--color-sub);
     color: var(--color-text-sub);
+    border: 1px solid var(--color-border);
   }
 
   .accordion__title {
@@ -389,7 +398,7 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    color: var(--color-accent);
+    color: var(--color-line);
     transition: transform 0.25s ease;
   }
 
@@ -427,8 +436,9 @@
   }
 
   .spec-block {
-    padding: 16px 24px;
-    background: transparent;
+    padding: 20px 24px;
+    background: var(--color-base);
+    border: 1px solid var(--color-border);
     border-left: 4px solid var(--color-text);
   }
 
@@ -482,6 +492,7 @@
     width: 100%;
     border-collapse: collapse;
     background: var(--color-base);
+    border: 1px solid var(--color-border);
   }
 
   .tool-list-table th {
@@ -491,6 +502,7 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text-sub);
+    background: var(--color-sub);
     padding: 16px 20px;
     text-align: left;
     border-bottom: 2px solid var(--color-border);
@@ -510,8 +522,8 @@
   .tool-list-table .tool-num {
     font-family: var(--font-accent);
     font-weight: 700;
-    color: var(--color-main);
-    opacity: 0.6;
+    color: var(--color-line);
+    opacity: 1;
     white-space: nowrap;
   }
 
@@ -547,7 +559,7 @@
 
   .reading-progress__bar {
     height: 100%;
-    background: var(--color-main);
+    background: var(--color-line);
     width: 0%;
     transition: width 0.1s linear;
   }
@@ -610,7 +622,7 @@
       right: 16px;
       width: 44px;
       height: 44px;
-      background: var(--color-main);
+      background: var(--color-line);
       color: #fff;
       align-items: center;
       justify-content: center;
@@ -709,7 +721,7 @@
   <aside class="sidebar" id="sidebar" role="navigation" aria-label="目次">
     <div class="sidebar__brand">
       <a href="#" class="sidebar__app-name">LINE STAMP TOOLS</a>
-      <div class="sidebar__doc-type">プロダクト仕様書 v1.0</div>
+      <div class="sidebar__doc-type">プロダクト仕様書 v2.0</div>
     </div>
 
     <nav class="sidebar__nav">
@@ -760,7 +772,7 @@
       <div class="page-header__meta">
         <div class="meta-badge">
           <span class="meta-badge__label">Version</span>
-          <span class="meta-badge__value">v1.0</span>
+          <span class="meta-badge__value">v2.0</span>
         </div>
         <div class="meta-badge">
           <span class="meta-badge__label">Status</span>
@@ -807,7 +819,7 @@
               </tr>
               <tr>
                 <th>最大の特徴</th>
-                <td>4つの独立したツールを1ページで俯瞰でき、動画デモで使い方を確認してからすぐにツールへアクセスできるナビゲーション設計</td>
+                <td>4つの独立したツールを1ページで俯瞰でき、デモ動画や概要を確認してからすぐにツールへアクセスできるナビゲーション設計</td>
               </tr>
               <tr>
                 <th>公開 URL</th>
@@ -857,7 +869,7 @@
               <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="accordion__body" id="body-1-1">
-              <p>LINEスタンプ制作を応援するために開発した3つの無料Webツール（背景透過・画像分割・画像リサイズ）と、リサイズツールの進化版として開発した、汎用的なリサイズ＆ファイル形式変換ツールを、1ページにまとめて紹介するポータルサイトです。各ツールの操作デモ動画とアクセスリンクを集約し、ユーザーが目的のツールをすぐに見つけて使い始められるように設計しました。</p>
+              <p>LINEスタンプ制作を応援するために開発した4つの無料Webツール（プロンプトテンプレート集・背景透過・画像分割・画像リサイズ）を、1ページにまとめて紹介するポータルサイトです。各ツールの操作デモや紹介文、アクセスリンクを集約し、ユーザーが目的のツールをすぐに見つけて使い始められるように設計しました。</p>
             </div>
           </div>
 
@@ -870,7 +882,7 @@
               <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="accordion__body" id="body-1-2">
-              <p><strong>背景：</strong>LINEスタンプの制作には「背景の透過」「画像の分割」「規定サイズへのリサイズ」など、複数の画像加工作業が必要になります。これらの作業を支援するため、それぞれに特化した専用ツールを順次開発してきました。</p>
+              <p><strong>背景：</strong>LINEスタンプの制作には「プロンプト（AIへの指示文）の作成」「背景の透過」「画像の分割」「規定サイズへのリサイズ」など、複数の制作・加工作業が必要になります。これらの作業を支援するため、それぞれに特化した専用ツールを順次開発してきました。</p>
               <p><strong>課題：</strong>ツールが複数になったことで、個別のURLを管理・共有するのが煩雑になり、初めて訪れるユーザーがどのツールを使えばよいか迷う可能性がありました。</p>
               <p><strong>解決策：</strong>まず、機能をあえて別々の独立したツールに分けて開発しました。1つのアプリにすべての機能を詰め込むと、ボタンや選択肢が増えて操作が複雑になり、利用者が迷う原因になります。また、使わない機能の読み込みによって全体の動作が重くなるデメリットもあります。さらに、ツールを機能ごとに独立させておくことで、将来特定の機能を改善・アップデートする際にも、他のツールへの影響を一切気にすることなく、必要な部分だけを迅速に修正・検証できます。そのうえで、これらを一覧できるポータルサイトを作成し、各ツールの役割を動画付きで簡潔に紹介することで、ユーザーが迷わず目的のツールにたどり着ける導線を作りました。</p>
             </div>
@@ -929,8 +941,21 @@
         </div>
         <div class="section-body">
 
-          <div class="accordion is-open" id="acc-3-1">
-            <button class="accordion__trigger" aria-expanded="true" aria-controls="body-3-1">
+          <div class="accordion is-open" id="acc-3-0">
+            <button class="accordion__trigger" aria-expanded="true" aria-controls="body-3-0">
+              <div class="accordion__trigger-left">
+                <span class="accordion__tag accordion__tag--feature">機能</span>
+                <span class="accordion__title">制作フローステップガイド（Introセクション）</span>
+              </div>
+              <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion__body" id="body-3-0">
+              <p>ページ上部の導入（Intro）エリアに、LINEスタンプ制作の一連の流れ（STEP 1: プロンプト作成 &rarr; STEP 2: 背景透過 &rarr; STEP 3: 画像分割 &rarr; STEP 4: 規定サイズリサイズ）を順を追って解説するワークフローボックスを配置しています。各ステップから該当ツールの紹介セクションへのページ内ジャンプが可能です。また、ツール01（PROMPT TEMPLATES）の詳細欄には、生成用AIツール（Google Gemini、Flow）への直接アクセスリンクも設けています。</p>
+            </div>
+          </div>
+
+          <div class="accordion" id="acc-3-1">
+            <button class="accordion__trigger" aria-expanded="false" aria-controls="body-3-1">
               <div class="accordion__trigger-left">
                 <span class="accordion__tag accordion__tag--feature">機能</span>
                 <span class="accordion__title">ツール一覧のビジュアル紹介</span>
@@ -938,7 +963,7 @@
               <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="accordion__body" id="body-3-1">
-              <p>4つのツールそれぞれについて、ツール名、紹介文、操作デモ動画、アクセスリンクをセクションごとにまとめて表示します。スクロールするだけで全ツールの概要を把握できます。</p>
+              <p>4つのツールそれぞれについて、ツール名、紹介文、操作デモ動画や概要、アクセスリンクをセクションごとにまとめて表示します。スクロールするだけで全ツールの概要を把握できます。</p>
             </div>
           </div>
 
@@ -1029,7 +1054,7 @@
               <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="accordion__body" id="body-4-2">
-              <p>ポータルサイトの配色は、各ツール共通で採用しているデザインシステム（白・エメラルドグリーン・グレーの3色ミニマリズム）に揃えています。枠線や影、角丸を一切使用しないフラットデザインも各ツールと統一しており、ポータルからツールへ遷移した際に違和感のない、一貫したブランド体験を提供しています。</p>
+              <p>ポータルサイトの配色は、白・濃淡グレーのモノトーンを基調に、アクセントとしてLINE公式カラー（#06C755）のみを配置するミニマルなデザインシステムを採用しています。枠線や影、角丸を抑えた洗練されたフラットデザインにより、各ツールへ遷移した際にも違和感のない、一貫したブランド体験を提供しています。</p>
             </div>
           </div>
 
@@ -1125,27 +1150,27 @@
           <tbody>
             <tr>
               <td class="tool-num">01</td>
+              <td class="tool-name-cell">Prompt Templates<br>LINEスタンプ用テンプレート集</td>
+              <td>写真をもとに、LINEスタンプ用のイラストを生成するためのプロンプト集</td>
+              <td><a class="url-link" href="https://jnishina-co9.github.io/line-prompt-templates/" target="_blank" rel="noopener">jnishina-co9.github.io/line-prompt-templates/</a></td>
+            </tr>
+            <tr>
+              <td class="tool-num">02</td>
               <td class="tool-name-cell">Background Remover<br>画像背景透過ツール</td>
               <td>AIが画像を解析し、被写体を切り抜いて背景を透過させたPNG画像を作成</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/line-background-remover/" target="_blank" rel="noopener">jnishina-co9.github.io/line-background-remover/</a></td>
             </tr>
             <tr>
-              <td class="tool-num">02</td>
+              <td class="tool-num">03</td>
               <td class="tool-name-cell">Image Splitter<br>画像分割ツール</td>
               <td>画像を指定したタテ×ヨコのマス目で均等に分割し、個別またはZIP形式で保存</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/line-image-splitter/" target="_blank" rel="noopener">jnishina-co9.github.io/line-image-splitter/</a></td>
             </tr>
             <tr>
-              <td class="tool-num">03</td>
+              <td class="tool-num">04</td>
               <td class="tool-name-cell">Image Resizer<br>画像リサイズツール</td>
               <td>LINEスタンプ画像特化型。申請時の制作ガイドラインが定める画像サイズ基準を自動で満たす画像を一括作成</td>
               <td><a class="url-link" href="https://jnishina-co9.github.io/line-image-resizer/" target="_blank" rel="noopener">jnishina-co9.github.io/line-image-resizer/</a></td>
-            </tr>
-            <tr>
-              <td class="tool-num">04</td>
-              <td class="tool-name-cell">Image Resizer &amp; Converter<br>画像リサイズ＆形式変換ツール</td>
-              <td>第3弾の進化版。LINEスタンプに限らず、サイト制作・SNS投稿・資料作成など幅広い用途に対応する汎用画像調整ツール</td>
-              <td><a class="url-link" href="https://jnishina-co9.github.io/image-resizer-converter/" target="_blank" rel="noopener">jnishina-co9.github.io/image-resizer-converter/</a></td>
             </tr>
           </tbody>
         </table>
@@ -1161,7 +1186,7 @@
         </div>
         <div class="section-body">
           <div class="accordion__body" style="display: block; background: var(--color-base); padding: 32px 24px;">
-            <p>開発にあたっては、あえて1つの万能アプリにはせず、機能ごとに独立したツールとして分離する設計を選びました。これは「利用者が迷わないシンプルな画面」と「将来の改善が容易なメンテナンス性」を両立させるためです。第3弾のリサイズツールはLINEスタンプ申請に特化した専用ツールとして、第4弾はそこからさらに進化させ、サイト制作やSNS投稿、資料作成にも活用できる汎用ツールとして、UI/UXを考慮して開発できたと感じています。</p>
+            <p>開発にあたっては、あえて1つの万能アプリにはせず、機能ごとに独立したツールとして分離する設計を選びました。これは「利用者が迷わないシンプルな画面」と「将来の改善が容易なメンテナンス性」を両立させるためです。LINEスタンプ制作の一連の流れ（プロンプト生成から背景透過・分割・リサイズまで）をスムーズに進められるよう、UI/UXを考慮して開発できたと感じています。</p>
             <p>どのツールもブラウザだけで完結し、画像データを外部サーバーに送信しない設計にしているため、安心してお使いいただけます。LINEスタンプ制作に取り組むすべての方にとって、これらのツールが少しでもお役に立てれば幸いです。</p>
           </div>
         </div>
