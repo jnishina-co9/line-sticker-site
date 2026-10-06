@@ -535,6 +535,12 @@
   /* =============================================
      DEMO VIDEO
   ============================================= */
+  .spec-block--demo {
+    background: transparent;
+    border: none;
+    border-left: 4px solid var(--color-text);
+  }
+
   .demo-video-wrapper {
     position: relative;
     width: 100%;
@@ -546,7 +552,6 @@
     width: 100%;
     height: auto;
     display: block;
-    border: 1px solid var(--color-border);
   }
 
   /* =============================================
@@ -906,7 +911,7 @@
           </div>
 
           <!-- デモ動画 -->
-          <div class="spec-block">
+          <div class="spec-block spec-block--demo">
             <div class="spec-block__label">デモ動画</div>
             <div class="demo-video-wrapper">
               <video src="demo.mp4" preload="metadata" autoplay loop muted playsinline controls>
